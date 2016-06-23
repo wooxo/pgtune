@@ -585,7 +585,19 @@ def wizard_tune(config, options, settings):
 
     if (options.logging):
         # TODO Add basic logging:  log_line_prefix, log_lock_waits, etc.
-        pass
+	s['logging_collector'] = "'on'"
+	s['log_filename'] = "'postgresql-%Y-%m-%d_%H%M%S.log'"
+	s['log_line_prefix'] = "'%t [%p]: [%l-1] '"
+	s['log_duration'] = 'on'
+	s['log_statement'] = 'none'
+	s['log_min_duration_statement'] = 0
+	s['log_temp_files'] = 0
+	s['log_checkpoints'] = 'on'
+	s['log_connections'] = 'on'
+	s['log_disconnections'] = 'on'
+	s['log_lock_waits'] = 'on'
+	s['log_autovacuum_min_duration'] = 250
+	s['shared_preload_libraries'] = 'pg_stat_statements'
 
     # Header to identify when the program ran, before any new settings    
     config.identify_session("")
