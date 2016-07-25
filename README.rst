@@ -65,14 +65,14 @@ are the some of the parameters:
 
 Check the code in pgtune python script to see all options.
 
-FinCad Setup
+FINCAD Setup
 ====
 
-Here is a typical usage for an initail Fincad setup including enabling logging:
+Here is a typical usage for an initial FINCAD setup including enabling logging:
 
-  python pgtune -V 9.5 -T OLTP -c 100 -L -i $PGDATA/postgresql.conf -o ./postgresql.conf.9.5-with_logging
+  python pgtune -V 9.5 -T OLTP -c 100 -L True -i $PGDATA/postgresql.conf -o $PGDATA/postgresql.conf.9.5-with_logging
 
-If logging is not required then remove the "-L" option.
+If logging is not required then remove the "-L True" command line option.
 
 
 Todo
