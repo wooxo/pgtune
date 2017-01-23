@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
+# OSX: ln -sf /usr/bin/python2.7 /usr/local/bin/python2
+
 """
 pgtune
 
@@ -14,7 +16,7 @@ import optparse
 import csv
 import platform
 import re
-from subprocess import check_output, Popen, PIPE, STDOUT
+from subprocess import check_output, PIPE, STDOUT
 
 # Windows specific routines
 try:
@@ -62,12 +64,8 @@ def total_mem():
         if platform.system() == "Windows":
             mem = Win32Memory()
         elif platform.system() == "Darwin":
-            # Least ugly way to find the amount of RAM on OS X, tested on
-            # 10.6
-            cmd = 'sysctl hw.memsize'
-            p = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT,
-                      close_fds=True)
-            output = p.stdout.read()
+            # Least ugly way to find the amount of RAM on OS X, tested on 10.12
+            output = check_output('sysctl hw.memsize', shell=True)
             m = re.match(r'^hw.memsize[:=]\s*(\d+)$', output.strip())
             if m and m.groups():
                 mem = int(m.groups()[0])
@@ -673,8 +671,8 @@ def main(program_args):
     # Determine version of PostgreSQL to target
     db_version = options.db_version   
     if db_version is None:
-        try: pg_config = str(check_output("pg_config")).split('\n')
-        except OSError: 
+        try: pg_config = str(check_output('pg_config')).split('\n')
+        except: 
             print "Error: database version not specified and unable to execute pg_config" 
             sys.exit(1)
 
