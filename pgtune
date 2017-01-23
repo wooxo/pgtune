@@ -14,7 +14,7 @@ import optparse
 import csv
 import platform
 import re
-from subprocess import Popen, PIPE, STDOUT
+from subprocess import check_output, Popen, PIPE, STDOUT
 
 # Windows specific routines
 try:
@@ -619,8 +619,8 @@ def read_options(program_args):
     parser.add_option('-M', '--memory', dest="total_memory", default=None, 
                       help="Total system memory, in bytes.  Will attempt to detect if unspecified")
 
-    parser.add_option('-V', '--version', dest="db_version", default="8.4", 
-                      help="Major version number for target version of PostgreSQL to configure for.  Default is 8.4")
+    parser.add_option('-V', '--version', dest="db_version", default=None, 
+                      help="Major version number for target version of PostgreSQL to configure for.")
       
     parser.add_option('-T', '--type', dest="db_type", default="Mixed", 
                       help="Database type, defaults to Mixed.  Valid options are DW, OLTP, Web, Mixed, Desktop")
@@ -673,8 +673,17 @@ def main(program_args):
     # Determine version of PostgreSQL to target
     db_version = options.db_version   
     if db_version is None:
-        print "Error:  database version not specified and unable to detect"
-        sys.exit(1)
+        try: pg_config = str(check_output("pg_config")).split('\n')
+        except OSError: 
+            print "Error: database version not specified and unable to execute pg_config" 
+            sys.exit(1)
+
+        db_version = [v.split()[-1] for v in pg_config if 'VERSION' in v]
+        if db_version == []:
+            print "Error: database version not specified and unable to detect"
+            sys.exit(1)
+
+        options.db_version = '.'.join(db_version[0].split('.')[:2])
           
     config = PGConfigFile(configFile)
     config.read_config_file()
