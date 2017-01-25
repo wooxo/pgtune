@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # OSX: ln -sf /usr/bin/python2.7 /usr/local/bin/python2
 
 """
@@ -16,7 +16,7 @@ import optparse
 import csv
 import platform
 import re
-from subprocess import check_output, PIPE, STDOUT
+from subprocess import Popen, PIPE, STDOUT
 
 # Windows specific routines
 try:
@@ -65,7 +65,8 @@ def total_mem():
             mem = Win32Memory()
         elif platform.system() == "Darwin":
             # Least ugly way to find the amount of RAM on OS X, tested on 10.12
-            output = check_output('sysctl hw.memsize', shell=True)
+            p = Popen('sysctl hw.memsize', shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+            output = p.stdout.read()
             m = re.match(r'^hw.memsize[:=]\s*(\d+)$', output.strip())
             if m and m.groups():
                 mem = int(m.groups()[0])
@@ -671,7 +672,9 @@ def main(program_args):
     # Determine version of PostgreSQL to target
     db_version = options.db_version   
     if db_version is None:
-        try: pg_config = str(check_output('pg_config')).split('\n')
+        try: 
+            p = Popen('pg_config', shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+            pg_config = str(p.stdout.read()).split('\n')
         except: 
             print "Error: database version not specified and unable to execute pg_config" 
             sys.exit(1)
