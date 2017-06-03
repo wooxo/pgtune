@@ -128,8 +128,8 @@ log_rotation_age	1440	min	Reporting and Logging / Where to Log	Automatic log fil
 log_rotation_size	10240	kB	Reporting and Logging / Where to Log	Automatic log file rotation will occur after N kilobytes.	\N	sighup	integer	0	2097151	\N	10240
 log_statement	none	\N	Reporting and Logging / What to Log	Sets the type of statements logged.	\N	superuser	enum	\N	\N	{none,ddl,mod,all}	none
 log_statement_stats	off	\N	Statistics / Monitoring	Writes cumulative performance statistics to the server log.	\N	superuser	bool	\N	\N	\N	off
-log_temp_files	-1	kB	Reporting and Logging / What to Log	Log the use of temporary files larger than this number of kilobytes.	Zero logs all files. The default is -1 (turning this feature off).	superuser	integer	-1	2147483647	\N	-1
-log_timezone	Europe/Stockholm	\N	Reporting and Logging / What to Log	Sets the time zone to use in log messages.	\N	sighup	string	\N	\N	\N	GMT
+log_temp_files	-1	\N	Reporting and Logging / What to Log	Log the use of temporary files larger than this number of kilobytes.	Zero logs all files. The default is -1 (turning this feature off).	superuser	integer	-1	2147483647	\N	-1
+log_timezone	Canada/Pacific	\N	Reporting and Logging / What to Log	Sets the time zone to use in log messages.	\N	sighup	string	\N	\N	\N	GMT
 log_truncate_on_rotation	off	\N	Reporting and Logging / Where to Log	Truncate existing log files of same name during log rotation.	\N	sighup	bool	\N	\N	\N	off
 logging_collector	off	\N	Reporting and Logging / Where to Log	Start a subprocess to capture stderr output and/or csvlogs into log files.	\N	postmaster	bool	\N	\N	\N	off
 maintenance_work_mem	65536	kB	Resource Usage / Memory	Sets the maximum memory to be used for maintenance operations.	This includes operations such as VACUUM and CREATE INDEX.	user	integer	1024	2147483647	\N	65536

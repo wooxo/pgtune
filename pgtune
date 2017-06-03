@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # OSX: ln -sf /usr/bin/python2.7 /usr/local/bin/python2
 
 """
@@ -590,9 +590,21 @@ def wizard_tune(config, options, settings):
     s['default_statistics_target'] = {'web':100, 'oltp':100, 'dw':500,
                                       'mixed':100, 'desktop':100}[db_type]
 
-    if (options.logging):
+    if options.logging == True:
         # TODO Add basic logging:  log_line_prefix, log_lock_waits, etc.
-        pass
+        s['logging_collector'] = "'on'"
+        s['log_filename'] = "'postgresql-%Y-%m-%d_%H%M%S.log'"
+        s['log_line_prefix'] = "'%t [%p]: [%l-1] '"
+        s['log_duration'] = 'on'
+        s['log_statement'] = 'none'
+        s['log_min_duration_statement'] = 0
+        s['log_temp_files'] = 0
+        s['log_checkpoints'] = 'on'
+        s['log_connections'] = 'on'
+        s['log_disconnections'] = 'on'
+        s['log_lock_waits'] = 'on'
+        s['log_autovacuum_min_duration'] = 250
+        s['shared_preload_libraries'] = 'pg_stat_statements'
 
     # Header to identify when the program ran, before any new settings
     config.identify_session("")
@@ -664,6 +676,7 @@ def read_options(program_args):
 
     return options, args, parser
 
+
 def main(program_args):
     options, args, parser = read_options(program_args)
 
@@ -721,6 +734,7 @@ def main(program_args):
         fout = open(output_file_name, 'w')
 
     config.write(fout)
+
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))
