@@ -37,7 +37,7 @@ Here's a sample usage::
   pgtune -i $PGDATA/postgresql.conf -o $PGDATA/postgresql.conf.pgtune
 
 pgtune --help will give you additional usage information.  These
-are the current parameters:
+are the some of the parameters:
 
  * -i or --input-config : Specifies the current postgresql.conf file.
 
@@ -62,6 +62,18 @@ are the current parameters:
    Defaults to the directory where the script is being run from.  The
    RPM package includes a patch to use the correct location these
    files were installed into.
+
+Check the code in pgtune python script to see all options.
+
+FINCAD Setup
+====
+
+Here is a typical usage for an initial FINCAD setup including enabling logging:
+
+  python pgtune -V 9.5 -T OLTP -c 100 -L True -i $PGDATA/postgresql.conf -o $PGDATA/postgresql.conf.9.5-with_logging
+
+If logging is not required then remove the "-L True" command line option.
+
 
 Todo
 ====
