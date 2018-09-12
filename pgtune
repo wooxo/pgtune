@@ -128,6 +128,8 @@ class PGConfigLine(object):
       delimiter (expectations are '' and "")
     """
     def __init__(self, line, num=0):
+        if line.startswith('#~pgtune~ '):
+            line = line[10:]
         self.original_line = line
         self.line_number = num
         self.sets_parameter = False
@@ -214,10 +216,16 @@ class PGConfigFile(object):
             line = line.rstrip('\n')
             line_num = i + 1
 
+            # skip previous 
+            if line.startswith('# pgtune for version'):
+                if len(self.config_lines) > 2:
+                    del self.config_lines[-2:]
+                break
+
             config_line = PGConfigLine(line, line_num)
             config_line.process_line()
             self.config_lines.append(config_line)
-
+            
             if config_line.is_setting():
                 # TODO Check if the line is already in the file, in which case
                 # we should throw and error here suggesting that be corrected
@@ -295,7 +303,7 @@ class PGConfigFile(object):
         if name in self.param_to_line:
             old_line = self.param_to_line[name]
             old_line_num = old_line.line_number
-            commentedLineText = "# %s" % old_line.original_line
+            commentedLineText = "#~pgtune~ %s" % old_line.original_line
             commentedLine = PGConfigLine(commentedLineText, old_line_num)
             commentedLine.process_line()
             # Subtract one here to adjust for zero offset of array.
@@ -619,6 +627,7 @@ def wizard_tune(config, options, settings):
     config.identify_session("#------------------------------------------------------------------------------")
     config.identify_session("# pgtune for version %s run on %s" % (options.db_version,datetime.date.today()))
     config.identify_session("# Based on %s KB RAM, platform %s, %s clients and %s workload" % (mem,options.platform,con,db_type))
+    config.identify_session("# Lines below this block will be removed by subsequent pgtune runs")
     config.identify_session("#------------------------------------------------------------------------------")
     config.identify_session("")
 
