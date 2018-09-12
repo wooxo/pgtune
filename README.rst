@@ -46,6 +46,9 @@ are the some of the parameters:
 
  * -M or --memory: Use this parameter to specify total system memory. If 
    not specified, pgtune will attempt to detect memory size.
+ 
+ * -m or --memory_percentile: Use this parameter to specify the percentile of
+   system memeory to be used.
 
  * -T or --type : Specifies database type. Valid options are:
    DW, OLTP, Web, Mixed, Desktop
